@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pitch Trainer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Pitch Trainer</h1>
+    <button id="settings-btn" class="icon-btn" aria-label="Settings">&#9881;</button>
+  </header>
+
+  <main>
+    <!-- Menu Screen -->
+    <section id="screen-menu" class="screen active">
+      <h2>Choose a Mode</h2>
+      <div class="mode-buttons">
+        <button class="mode-btn" data-mode="note">
+          <span class="mode-icon">&#9835;</span>
+          <span class="mode-label">Note ID</span>
+          <span class="mode-desc">Identify the played note</span>
+        </button>
+        <button class="mode-btn" data-mode="interval">
+          <span class="mode-icon">&#9837;&#9839;</span>
+          <span class="mode-label">Interval ID</span>
+          <span class="mode-desc">Identify the interval between two notes</span>
+        </button>
+      </div>
+      <div class="difficulty-selector">
+        <label for="difficulty">Difficulty:</label>
+        <div class="difficulty-buttons">
+          <button class="diff-btn active" data-difficulty="easy">Easy</button>
+          <button class="diff-btn" data-difficulty="medium">Medium</button>
+          <button class="diff-btn" data-difficulty="hard">Hard</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playing Screen -->
+    <section id="screen-playing" class="screen">
+      <div class="score-bar">
+        <span id="score-display">0 / 0 (0%)</span>
+        <span id="streak-display">Streak: 0 | Best: 0</span>
+      </div>
+      <div class="question-area">
+        <p id="question-text">What note is this?</p>
+        <div class="playback-controls">
+          <button id="replay-btn" class="action-btn">&#9654; Replay<span id="replay-count"></span></button>
+          <button id="scale-btn" class="action-btn" style="display:none;">&#9835; Scale (S)</button>
+          <button id="back-to-menu-btn" class="action-btn secondary">&#8592; Menu</button>
+        </div>
+      </div>
+      <div id="answer-grid" class="answer-grid"></div>
+      <p class="hint-text">Use number keys (1-9, 0) to answer, R to replay, S for scale</p>
+    </section>
+
+    <!-- Result Screen -->
+    <section id="screen-result" class="screen">
+      <div class="score-bar">
+        <span id="result-score-display">0 / 0 (0%)</span>
+        <span id="result-streak-display">Streak: 0 | Best: 0</span>
+      </div>
+      <div id="result-feedback" class="result-feedback">
+        <p id="result-text"></p>
+        <p id="result-detail"></p>
+      </div>
+      <div id="result-answer-grid" class="answer-grid frozen"></div>
+      <button id="next-btn" class="action-btn primary">Next (Space)</button>
+    </section>
+
+    <!-- Settings Screen -->
+    <section id="screen-settings" class="screen">
+      <h2>Settings</h2>
+      <div class="settings-form">
+        <div class="setting-row">
+          <label for="octave-min">Octave Range:</label>
+          <div class="range-inputs">
+            <select id="octave-min">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+            </select>
+            <span>to</span>
+            <select id="octave-max">
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5" selected>5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label for="waveform">Waveform:</label>
+          <select id="waveform">
+            <option value="triangle" selected>Triangle</option>
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="ref-tone">Reference Tone (A4) before each question:</label>
+          <input type="checkbox" id="ref-tone">
+        </div>
+        <div class="setting-row">
+          <button id="reset-score-btn" class="action-btn danger">Reset Score &amp; Streak</button>
+        </div>
+        <div class="setting-row">
+          <button id="settings-back-btn" class="action-btn primary">&#8592; Back</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
