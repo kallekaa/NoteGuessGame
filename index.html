@@ -9,7 +9,10 @@
 <body>
   <header>
     <h1>Pitch Trainer</h1>
-    <button id="settings-btn" class="icon-btn" aria-label="Settings">&#9881;</button>
+    <div class="header-actions">
+      <button id="stats-btn" class="icon-btn" aria-label="Statistics">&#9776;</button>
+      <button id="settings-btn" class="icon-btn" aria-label="Settings">&#9881;</button>
+    </div>
   </header>
 
   <main>
@@ -27,13 +30,27 @@
           <span class="mode-label">Interval ID</span>
           <span class="mode-desc">Identify the interval between two notes</span>
         </button>
+        <button class="mode-btn" data-mode="chord">
+          <span class="mode-icon">&#9836;</span>
+          <span class="mode-label">Chord ID</span>
+          <span class="mode-desc">Identify the chord quality</span>
+        </button>
       </div>
-      <div class="difficulty-selector">
-        <label for="difficulty">Difficulty:</label>
-        <div class="difficulty-buttons">
-          <button class="diff-btn active" data-difficulty="easy">Easy</button>
-          <button class="diff-btn" data-difficulty="medium">Medium</button>
-          <button class="diff-btn" data-difficulty="hard">Hard</button>
+      <div class="menu-options">
+        <div class="difficulty-selector">
+          <label>Difficulty:</label>
+          <div class="difficulty-buttons">
+            <button class="diff-btn active" data-difficulty="easy">Easy</button>
+            <button class="diff-btn" data-difficulty="medium">Medium</button>
+            <button class="diff-btn" data-difficulty="hard">Hard</button>
+            <button class="diff-btn" data-difficulty="adaptive">Adaptive</button>
+          </div>
+        </div>
+        <div class="timed-toggle">
+          <label for="timed-mode">
+            <input type="checkbox" id="timed-mode">
+            <span>Timed Challenge (60s)</span>
+          </label>
         </div>
       </div>
     </section>
@@ -44,16 +61,23 @@
         <span id="score-display">0 / 0 (0%)</span>
         <span id="streak-display">Streak: 0 | Best: 0</span>
       </div>
+      <div id="timer-bar" class="timer-bar" style="display:none;">
+        <div id="timer-fill" class="timer-fill"></div>
+        <span id="timer-text" class="timer-text">60</span>
+      </div>
       <div class="question-area">
         <p id="question-text">What note is this?</p>
+        <p id="adaptive-level" class="adaptive-level" style="display:none;"></p>
+        <div id="piano-container" class="piano-container"></div>
         <div class="playback-controls">
           <button id="replay-btn" class="action-btn">&#9654; Replay<span id="replay-count"></span></button>
+          <button id="hint-btn" class="action-btn hint-btn">&#10068; Hint (H)</button>
           <button id="scale-btn" class="action-btn" style="display:none;">&#9835; Scale (S)</button>
           <button id="back-to-menu-btn" class="action-btn secondary">&#8592; Menu</button>
         </div>
       </div>
       <div id="answer-grid" class="answer-grid"></div>
-      <p class="hint-text">Use number keys (1-9, 0) to answer, R to replay, S for scale</p>
+      <p class="hint-text">Keys: 1-9/0 answer, R replay, H hint, S scale</p>
     </section>
 
     <!-- Result Screen -->
@@ -66,8 +90,39 @@
         <p id="result-text"></p>
         <p id="result-detail"></p>
       </div>
+      <div id="result-piano-container" class="piano-container"></div>
       <div id="result-answer-grid" class="answer-grid frozen"></div>
       <button id="next-btn" class="action-btn primary">Next (Space)</button>
+    </section>
+
+    <!-- Timed Result Screen -->
+    <section id="screen-timed-result" class="screen">
+      <div class="timed-result">
+        <h2>Time's Up!</h2>
+        <div class="timed-score">
+          <p class="big-score" id="timed-final-score">0</p>
+          <p class="score-label">correct answers</p>
+        </div>
+        <p id="timed-accuracy" class="timed-accuracy"></p>
+        <p id="timed-best-display" class="timed-best"></p>
+        <div class="timed-actions">
+          <button id="timed-retry-btn" class="action-btn primary">Try Again</button>
+          <button id="timed-menu-btn" class="action-btn secondary">&#8592; Menu</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Screen -->
+    <section id="screen-stats" class="screen">
+      <h2>Statistics</h2>
+      <div class="stats-tabs">
+        <button class="stats-tab active" data-tab="overview">Overview</button>
+        <button class="stats-tab" data-tab="note">Notes</button>
+        <button class="stats-tab" data-tab="interval">Intervals</button>
+        <button class="stats-tab" data-tab="chord">Chords</button>
+      </div>
+      <div id="stats-content" class="stats-content"></div>
+      <button id="stats-back-btn" class="action-btn primary">&#8592; Back</button>
     </section>
 
     <!-- Settings Screen -->
@@ -101,6 +156,13 @@
           </select>
         </div>
         <div class="setting-row">
+          <label for="volume-slider">Volume:</label>
+          <div class="volume-control">
+            <input type="range" id="volume-slider" min="0" max="100" value="60">
+            <span id="volume-display">60%</span>
+          </div>
+        </div>
+        <div class="setting-row">
           <label for="ref-tone">Reference Tone (A4) before each question:</label>
           <input type="checkbox" id="ref-tone">
         </div>
@@ -108,11 +170,19 @@
           <button id="reset-score-btn" class="action-btn danger">Reset Score &amp; Streak</button>
         </div>
         <div class="setting-row">
+          <button id="reset-stats-btn" class="action-btn danger">Reset All Statistics</button>
+        </div>
+        <div class="setting-row">
           <button id="settings-back-btn" class="action-btn primary">&#8592; Back</button>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- Countdown Overlay (used for timed mode) -->
+  <div id="countdown-overlay" class="countdown-overlay" style="display:none;">
+    <span id="countdown-number" class="countdown-number">3</span>
+  </div>
 
   <script src="app.js"></script>
 </body>
