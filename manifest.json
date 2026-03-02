@@ -1,0 +1,25 @@
+{
+  "name": "Pitch Trainer — Ear Training",
+  "short_name": "Pitch Trainer",
+  "description": "World-class ear training: notes, intervals, chords, and progressions",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f0e17",
+  "theme_color": "#e94560",
+  "orientation": "portrait",
+  "categories": ["education", "music"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230f0e17'/><text x='96' y='130' font-size='120' text-anchor='middle' fill='%23e94560'>♫</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='64' fill='%230f0e17'/><text x='256' y='350' font-size='320' text-anchor='middle' fill='%23e94560'>♫</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#e94560">
+  <meta name="description" content="World-class ear training: notes, intervals, chords, and progressions">
+  <link rel="manifest" href="manifest.json">
   <title>Pitch Trainer</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,30 +13,41 @@
   <header>
     <h1>Pitch Trainer</h1>
     <div class="header-actions">
-      <button id="stats-btn" class="icon-btn" aria-label="Statistics">&#9776;</button>
-      <button id="settings-btn" class="icon-btn" aria-label="Settings">&#9881;</button>
+      <button id="stats-btn" class="icon-btn" aria-label="View statistics">&#9776;</button>
+      <button id="settings-btn" class="icon-btn" aria-label="Open settings">&#9881;</button>
     </div>
   </header>
 
+  <!-- ARIA live region for screen reader announcements -->
+  <div id="sr-announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Achievement toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
   <main>
     <!-- Menu Screen -->
-    <section id="screen-menu" class="screen active">
+    <section id="screen-menu" class="screen active" role="region" aria-label="Game menu">
       <h2>Choose a Mode</h2>
       <div class="mode-buttons">
-        <button class="mode-btn" data-mode="note">
+        <button class="mode-btn" data-mode="note" aria-label="Note identification mode">
           <span class="mode-icon">&#9835;</span>
           <span class="mode-label">Note ID</span>
           <span class="mode-desc">Identify the played note</span>
         </button>
-        <button class="mode-btn" data-mode="interval">
+        <button class="mode-btn" data-mode="interval" aria-label="Interval identification mode">
           <span class="mode-icon">&#9837;&#9839;</span>
           <span class="mode-label">Interval ID</span>
           <span class="mode-desc">Identify the interval between two notes</span>
         </button>
-        <button class="mode-btn" data-mode="chord">
+        <button class="mode-btn" data-mode="chord" aria-label="Chord identification mode">
           <span class="mode-icon">&#9836;</span>
           <span class="mode-label">Chord ID</span>
           <span class="mode-desc">Identify the chord quality</span>
+        </button>
+        <button class="mode-btn" data-mode="progression" aria-label="Chord progression identification mode">
+          <span class="mode-icon">&#9833;&#9833;</span>
+          <span class="mode-label">Progression ID</span>
+          <span class="mode-desc">Identify the chord progression</span>
         </button>
       </div>
       <div class="menu-options">
@@ -46,17 +60,21 @@
             <button class="diff-btn" data-difficulty="adaptive">Adaptive</button>
           </div>
         </div>
-        <div class="timed-toggle">
-          <label for="timed-mode">
+        <div class="menu-toggles">
+          <label class="toggle-label" for="timed-mode">
             <input type="checkbox" id="timed-mode">
             <span>Timed Challenge (60s)</span>
+          </label>
+          <label class="toggle-label" for="focused-mode">
+            <input type="checkbox" id="focused-mode">
+            <span>Practice Weak Areas</span>
           </label>
         </div>
       </div>
     </section>
 
     <!-- Playing Screen -->
-    <section id="screen-playing" class="screen">
+    <section id="screen-playing" class="screen" role="region" aria-label="Game play">
       <div class="score-bar">
         <span id="score-display">0 / 0 (0%)</span>
         <span id="streak-display">Streak: 0 | Best: 0</span>
@@ -68,35 +86,38 @@
       <div class="question-area">
         <p id="question-text">What note is this?</p>
         <p id="adaptive-level" class="adaptive-level" style="display:none;"></p>
+        <p id="key-indicator" class="key-indicator" style="display:none;"></p>
+        <div id="staff-container" class="staff-container"></div>
         <div id="piano-container" class="piano-container"></div>
         <div class="playback-controls">
-          <button id="replay-btn" class="action-btn">&#9654; Replay<span id="replay-count"></span></button>
-          <button id="hint-btn" class="action-btn hint-btn">&#10068; Hint (H)</button>
-          <button id="scale-btn" class="action-btn" style="display:none;">&#9835; Scale (S)</button>
-          <button id="back-to-menu-btn" class="action-btn secondary">&#8592; Menu</button>
+          <button id="replay-btn" class="action-btn" aria-label="Replay the sound">&#9654; Replay<span id="replay-count"></span></button>
+          <button id="hint-btn" class="action-btn hint-btn" aria-label="Get a hint">&#10068; Hint (H)</button>
+          <button id="scale-btn" class="action-btn" style="display:none;" aria-label="Play the major scale">&#9835; Scale (S)</button>
+          <button id="back-to-menu-btn" class="action-btn secondary" aria-label="Return to menu">&#8592; Menu</button>
         </div>
       </div>
-      <div id="answer-grid" class="answer-grid"></div>
-      <p class="hint-text">Keys: 1-9/0 answer, R replay, H hint, S scale</p>
+      <div id="answer-grid" class="answer-grid" role="group" aria-label="Answer choices"></div>
+      <p class="hint-text keyboard-hint">Keys: 1-9/0 answer, R replay, H hint, S scale</p>
     </section>
 
     <!-- Result Screen -->
-    <section id="screen-result" class="screen">
+    <section id="screen-result" class="screen" role="region" aria-label="Result">
       <div class="score-bar">
         <span id="result-score-display">0 / 0 (0%)</span>
         <span id="result-streak-display">Streak: 0 | Best: 0</span>
       </div>
-      <div id="result-feedback" class="result-feedback">
+      <div id="result-feedback" class="result-feedback" role="alert">
         <p id="result-text"></p>
         <p id="result-detail"></p>
       </div>
+      <div id="result-staff-container" class="staff-container"></div>
       <div id="result-piano-container" class="piano-container"></div>
-      <div id="result-answer-grid" class="answer-grid frozen"></div>
-      <button id="next-btn" class="action-btn primary">Next (Space)</button>
+      <div id="result-answer-grid" class="answer-grid frozen" role="group" aria-label="Answer review"></div>
+      <button id="next-btn" class="action-btn primary" aria-label="Next question">Next (Space)</button>
     </section>
 
     <!-- Timed Result Screen -->
-    <section id="screen-timed-result" class="screen">
+    <section id="screen-timed-result" class="screen" role="region" aria-label="Timed challenge results">
       <div class="timed-result">
         <h2>Time's Up!</h2>
         <div class="timed-score">
@@ -106,39 +127,42 @@
         <p id="timed-accuracy" class="timed-accuracy"></p>
         <p id="timed-best-display" class="timed-best"></p>
         <div class="timed-actions">
-          <button id="timed-retry-btn" class="action-btn primary">Try Again</button>
-          <button id="timed-menu-btn" class="action-btn secondary">&#8592; Menu</button>
+          <button id="timed-share-btn" class="action-btn" aria-label="Share your result">Share</button>
+          <button id="timed-retry-btn" class="action-btn primary" aria-label="Try again">Try Again</button>
+          <button id="timed-menu-btn" class="action-btn secondary" aria-label="Return to menu">&#8592; Menu</button>
         </div>
       </div>
     </section>
 
     <!-- Stats Screen -->
-    <section id="screen-stats" class="screen">
+    <section id="screen-stats" class="screen" role="region" aria-label="Statistics">
       <h2>Statistics</h2>
-      <div class="stats-tabs">
-        <button class="stats-tab active" data-tab="overview">Overview</button>
-        <button class="stats-tab" data-tab="note">Notes</button>
-        <button class="stats-tab" data-tab="interval">Intervals</button>
-        <button class="stats-tab" data-tab="chord">Chords</button>
+      <div class="stats-tabs" role="tablist">
+        <button class="stats-tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+        <button class="stats-tab" data-tab="note" role="tab" aria-selected="false">Notes</button>
+        <button class="stats-tab" data-tab="interval" role="tab" aria-selected="false">Intervals</button>
+        <button class="stats-tab" data-tab="chord" role="tab" aria-selected="false">Chords</button>
+        <button class="stats-tab" data-tab="history" role="tab" aria-selected="false">History</button>
+        <button class="stats-tab" data-tab="achievements" role="tab" aria-selected="false">Badges</button>
       </div>
-      <div id="stats-content" class="stats-content"></div>
-      <button id="stats-back-btn" class="action-btn primary">&#8592; Back</button>
+      <div id="stats-content" class="stats-content" role="tabpanel"></div>
+      <button id="stats-back-btn" class="action-btn primary" aria-label="Go back">&#8592; Back</button>
     </section>
 
     <!-- Settings Screen -->
-    <section id="screen-settings" class="screen">
+    <section id="screen-settings" class="screen" role="region" aria-label="Settings">
       <h2>Settings</h2>
       <div class="settings-form">
         <div class="setting-row">
           <label for="octave-min">Octave Range:</label>
           <div class="range-inputs">
-            <select id="octave-min">
+            <select id="octave-min" aria-label="Minimum octave">
               <option value="2">2</option>
               <option value="3" selected>3</option>
               <option value="4">4</option>
             </select>
             <span>to</span>
-            <select id="octave-max">
+            <select id="octave-max" aria-label="Maximum octave">
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5" selected>5</option>
@@ -153,24 +177,52 @@
             <option value="sine">Sine</option>
             <option value="square">Square</option>
             <option value="sawtooth">Sawtooth</option>
+            <option value="piano">Piano (FM)</option>
           </select>
         </div>
         <div class="setting-row">
           <label for="volume-slider">Volume:</label>
           <div class="volume-control">
-            <input type="range" id="volume-slider" min="0" max="100" value="60">
+            <input type="range" id="volume-slider" min="0" max="100" value="60" aria-label="Volume">
             <span id="volume-display">60%</span>
           </div>
         </div>
         <div class="setting-row">
-          <label for="ref-tone">Reference Tone (A4) before each question:</label>
-          <input type="checkbox" id="ref-tone">
+          <label for="ref-tone">Reference Tone (A4):</label>
+          <input type="checkbox" id="ref-tone" aria-label="Play reference tone before each question">
+        </div>
+        <div class="setting-row">
+          <label for="key-context">Key Context:</label>
+          <div class="key-context-controls">
+            <input type="checkbox" id="key-context" aria-label="Enable key context">
+            <select id="key-select" aria-label="Select key" disabled>
+              <option value="0">C Major</option>
+              <option value="1">G Major</option>
+              <option value="2">D Major</option>
+              <option value="3">A Major</option>
+              <option value="4">F Major</option>
+              <option value="5">Bb Major</option>
+              <option value="6">Eb Major</option>
+              <option value="7">A Minor</option>
+              <option value="8">E Minor</option>
+              <option value="9">D Minor</option>
+              <option value="10">G Minor</option>
+              <option value="11">C Minor</option>
+            </select>
+          </div>
         </div>
         <div class="setting-row">
           <button id="reset-score-btn" class="action-btn danger">Reset Score &amp; Streak</button>
         </div>
         <div class="setting-row">
           <button id="reset-stats-btn" class="action-btn danger">Reset All Statistics</button>
+        </div>
+        <div class="setting-row setting-row-export">
+          <button id="export-btn" class="action-btn">Export Stats</button>
+          <label class="action-btn import-label" tabindex="0">
+            Import Stats
+            <input type="file" id="import-input" accept=".json" hidden>
+          </label>
         </div>
         <div class="setting-row">
           <button id="settings-back-btn" class="action-btn primary">&#8592; Back</button>
@@ -179,7 +231,7 @@
     </section>
   </main>
 
-  <!-- Countdown Overlay (used for timed mode) -->
+  <!-- Countdown Overlay -->
   <div id="countdown-overlay" class="countdown-overlay" style="display:none;">
     <span id="countdown-number" class="countdown-number">3</span>
   </div>
